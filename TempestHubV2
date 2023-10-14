@@ -1,0 +1,84 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "TempestHub | @unaveragemo",
+    LoadingTitle = "unaveragemo on discord",
+    LoadingSubtitle = "by unaveragemo",
+    ConfigurationSaving = {
+       Enabled = true,
+       FolderName = nil, -- Create a custom folder for your hub/game
+       FileName = "TempestHub"
+    },
+    Discord = {
+       Enabled = false,
+       Invite = "Gt28ffz3pb", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+       RememberJoins = false -- Set this to false to make them join the discord every time they load it up
+    },
+    KeySystem = true, -- Set this to true to use our key system
+    KeySettings = {
+       Title = "TempestHub | @unaveragemo",
+       Subtitle = "Key System",
+       Note = "Join the discord (discord.gg/Gt28ffz3pb)",
+       FileName = "FileForKey", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+       SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+       GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+       Key = {"187"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+    }
+ })
+ Rayfield:Notify({
+    Title = "Have Fun",
+    Content = "With TempestHub",
+    Duration = 3.5,
+    Image = 4483362458,
+    Actions = { -- Notification Buttons
+       Ignore = {
+          Name = "Thanks!",
+          Callback = function()
+          print("The user tapped Thanks!")
+       end
+    },
+ },
+ })
+
+ local Tab = Window:CreateTab("Main", 4483362458) -- Title, Image
+ local Section = Tab:CreateSection("Main Scripts")
+
+ local Button = Tab:CreateButton({
+    Name = "Print Example",
+    Callback = function()
+        print('discord.gg/Gt28ffz3pb')
+    -- The function that takes place when the button is pressed
+    end,
+ })
+ local Toggle = Tab:CreateToggle({
+    Name = "Toggle Example",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+    -- The function that takes place when the toggle is pressed
+    -- The variable (Value) is a boolean on whether the toggle is true or false
+    end,
+ })
+
+ local Slider = Tab:CreateSlider({
+    Name = "Slider Example",
+    Range = {0, 100},
+    Increment = 10,
+    Suffix = "Bananas",
+    CurrentValue = 10,
+    Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+    -- The function that takes place when the slider changes
+    -- The variable (Value) is a number which correlates to the value the slider is currently at
+    end,
+ })
+
+
+
+
+
+
+
+
+
+Rayfield:LoadConfiguration()
