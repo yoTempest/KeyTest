@@ -12,18 +12,18 @@ local Window = Rayfield:CreateWindow({
     },
     Discord = {
        Enabled = false,
-       Invite = "Gt28ffz3pb", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
-       RememberJoins = false -- Set this to false to make them join the discord every time they load it up
+       Invite = "4QNdKZVY79", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+       RememberJoins = true -- Set this to false to make them join the discord every time they load it up
     },
     KeySystem = true, -- Set this to true to use our key system
     KeySettings = {
        Title = "TempestHub | @unaveragemo",
        Subtitle = "Key System",
-       Note = "Join the discord (discord.gg/Gt28ffz3pb)",
+       Note = "Copy to Browser (dsc.gg/temphub)",
        FileName = "dForKeyV2", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-       SaveKey = false, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-       GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-       Key = {"187"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+       SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+       GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+       Key = {"https://pastebin.com/raw/u4u5LKdc"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
     }
  })
 
@@ -49,7 +49,127 @@ local Window = Rayfield:CreateWindow({
 -- Section Main
  local Section = MainTab:CreateSection("Local Player")
 
+ 
 -- Buttons Main
+ local Toggle = MainTab:CreateToggle({
+   Name = "Superhuman",
+   CurrentValue = false,
+   Flag = "TempestHubV2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+      local player = game.Players.LocalPlayer
+        local character = player.Character
+
+        -- Warte, bis der Character erstellt ist, wenn er noch nicht vorhanden ist
+        while not character do
+            character = player.Character
+            wait(0.1)
+        end
+
+        local humanoid = character:WaitForChild("Humanoid")
+
+        if Value then
+            -- Toggle wurde aktiviert
+            humanoid.WalkSpeed = 500 -- Ändere die Zahl für die gewünschte Laufgeschwindigkeit
+            humanoid.JumpPower = 300 -- Ändere die Zahl für die gewünschte Sprunghöhe
+        else
+            -- Toggle wurde deaktiviert
+            humanoid.WalkSpeed = 16 -- Die Standardlaufgeschwindigkeit in Roblox
+            humanoid.JumpPower = 50 -- Die Standardsprunghöhe in Roblox
+        end
+   end,
+ })
+ 
+ local Slider = MainTab:CreateSlider({
+   Name = "Walkspeed (1 Standart)",
+   Range = {0, 150},
+   Increment = 1,
+   Suffix = "Walkspeed",
+   CurrentValue = 16,
+   Flag = "TempestHubV2",
+   Callback = function(Value)
+       local player = game.Players.LocalPlayer
+       local character = player.Character
+
+       -- Warte, bis der Character erstellt ist, wenn er noch nicht vorhanden ist
+       while not character do
+           character = player.Character
+           wait(0.1)
+       end
+
+       local humanoid = character:FindFirstChildOfClass("Humanoid")
+       if humanoid then
+           -- Wenn der Wert 0 ist, kann der Charakter nicht laufen
+           if Value == 0 then
+               humanoid.WalkSpeed = 0
+               print("Charakter kann nicht laufen.")
+           else
+               -- Begrenze den Wert auf den gültigen Bereich (0 bis 150)
+               local clampedValue = math.clamp(Value, 0, 150)
+               -- Berechne den Walkspeed-Wert basierend auf dem Slider-Wert
+               local walkspeed = clampedValue + 16
+               humanoid.WalkSpeed = walkspeed
+               print("Walkspeed auf " .. walkspeed .. " gesetzt!")
+           end
+       else
+           warn("Humanoid nicht gefunden!")
+       end
+   end,
+ })
+
+ local Slider = MainTab:CreateSlider({
+   Name = "Jump Power (50 Standart)",
+   Range = {0, 300},
+   Increment = 1,
+   Suffix = "Jump Power",
+   CurrentValue = 50,
+   Flag = "TempestHubV2",
+   Callback = function(Value)
+       local player = game.Players.LocalPlayer
+       local character = player.Character
+
+       -- Warte, bis der Character erstellt ist, wenn er noch nicht vorhanden ist
+       while not character do
+           character = player.Character
+           wait(0.1)
+       end
+
+       local humanoid = character:FindFirstChildOfClass("Humanoid")
+       if humanoid then
+           -- Begrenze den Wert auf den gültigen Bereich (0 bis 100)
+           local clampedValue = math.clamp(Value, 0, 300)
+           -- Setze die Sprunghöhe basierend auf dem Slider-Wert
+           humanoid.JumpPower = clampedValue
+           print("Sprunghöhe auf " .. clampedValue .. " gesetzt!")
+       else
+           warn("Humanoid nicht gefunden!")
+       end
+   end,
+ })
+
+ local KillButton = MainTab:CreateButton({
+   Name = "Kill Character",
+   Callback = function()
+       local player = game.Players.LocalPlayer
+
+       -- Überprüfe, ob der Spieler einen Charakter hat
+       if player.Character then
+           -- Zugriff auf den Humanoid des Charakters
+           local humanoid = player.Character:FindFirstChild("Humanoid")
+           
+           -- Überprüfe, ob der Humanoid gefunden wurde
+           if humanoid then
+               -- Setze die Health-Eigenschaft des Humanoids auf 0, um den Charakter zu töten
+               humanoid.Health = 0
+               print("Charakter getötet!")
+           else
+               warn("Humanoid des Charakters nicht gefunden!")
+           end
+       else
+           warn("Spieler hat keinen Charakter!")
+       end
+   end,
+ })
+
  local Button = MainTab:CreateButton({
     Name = "Rejoin",
     Callback = function()
@@ -91,21 +211,7 @@ local Window = Rayfield:CreateWindow({
       loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/Invisible%20Gui'))()
    end,
  })
-
- local Toggle = MainTab:CreateToggle({
-   Name = "Toggle Example",
-   CurrentValue = false,
-   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(InfiniteJumpEnabled)
-       local InfiniteJumpEnabled = true
-       game:GetService("UserInputService").JumpRequest:connect(function()
-         if InfiniteJumpEnabled then
-            game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass"Humanoid":ChangeState("Jumping"
-         end)
-      end)     
-   end,
- })
-
+ 
 -- Tabs Scripts
  local ScriptsTab = Window:CreateTab("Scripts", 4483362458) -- Title, Image
 
@@ -135,7 +241,7 @@ local Window = Rayfield:CreateWindow({
  })
 
  local Button = ScriptsTab:CreateButton({
-   Name = "Jailbreak Script🕹️",
+   Name = "Jailbreak Script 🕹️",
    Callback = function()
       loadstring(game:HttpGet("https://raw.githubusercontent.com/KuriWasTaken/MonkeyScripts/main/JailMonkey.lua"))()
    end,
@@ -175,8 +281,7 @@ local Window = Rayfield:CreateWindow({
       loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua", true))()
    end,
  })
-
-
+ 
 -- Tabs Fun
  local FunTab = Window:CreateTab("FE Scripts", 4483345998) -- Title, Image
 
@@ -198,7 +303,23 @@ local Window = Rayfield:CreateWindow({
    end,
  })
 
+ local Button = FunTab:CreateButton({
+   Name = "Fling Player",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/YssHacker/Fe-Trolling-GUI/main/mainscript2"))()
+   end,
+ })
 
+ local Dropdown = FunTab:CreateDropdown({
+   Name = "Cedits",
+   Options = {"Made by Tempest","Made by Tempest" , "Made by Tempest","Made by Tempest" , "Made by Tempest","Made by Tempest" , "Made by Tempest","Kai if you see this you are gay"},
+   CurrentOption = "👑" or {"Option 1","Option 3"},
+   MultiSelection = true, -- If MultiSelections is allowed
+   Flag = "TempestHubV2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Option)
+      print("Made by Tempest")
+   end,
+ })
 
 
 
