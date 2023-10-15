@@ -15,7 +15,7 @@ local Window = Rayfield:CreateWindow({
        Invite = "4QNdKZVY79", 
        RememberJoins = true 
     },
-    KeySystem = true, -- Set this to true to use our key system
+    KeySystem = true, 
     KeySettings = {
        Title = "TempestHub | @unaveragemo",
        Subtitle = "Key System",
